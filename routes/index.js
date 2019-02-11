@@ -5,21 +5,27 @@ const db = require('../database')
 const validateJson = require('./validateJson')
 
 router.get('/', (_, response) => {
-  response.text("Nothing to see here")
+  response.render('index');
 })
 
 router.get('/products', function (_, response) {
   response.json(productData);
 });
 
-router.get('/sales', (_, response) => {
-  db.any("select * from sales")
-    .then(result => {
-      response.json(result);
-    })
-    .catch(_ => {
-      response.status(500).end();
-    })
+router.get('/sales', (request, response) => {
+  const teamId = request.header('x-team-id')
+
+  if (teamId === undefined) {
+    response.status(400).json({ error: "Missing x-team-id header" });
+  } else {
+    db.any("select id, sale_data, created_at from sales where team_id=${teamId}", { teamId })
+      .then(result => {
+        response.json(result);
+      })
+      .catch(_ => {
+        response.status(500).end();
+      })
+  }
 })
 
 router.get('/sales/:id', (request, response) => {

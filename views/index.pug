@@ -1,5 +1,121 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .row
+    .twelve
+      h1 POST API
+
+  .row
+    .twelve
+      h2 Authentication
+
+  .row
+    .twelve
+      p Teams must supply identifying information in the form of a custom header
+        code x-team-id
+      pre
+        code x-team-id: jrob
+  .row
+    .twelve
+      h2 Endpoints
+      h3 Products
+      h4 Read (list all)
+
+      p Retrieve json listing of products available in this POST.
+      pre
+        code GET /products
+
+      p Returns an array of products in the following format:
+      pre
+        code
+          | [{
+          |  upc: "CX14",
+          |  description: "Wine - Niagara,vqa Reisling",
+          |  price: "$79.75"
+          | }]
+
+      h3 Sales
+      h4 Read (list all)
+
+      p Retrieve a json listing of sales made in this POST.
+      pre
+        code GET /sales
+
+      p Returns an array of sales in the following format:
+      pre
+        code
+          | [{
+          |  "id": 6,
+          |  "sale_data": {
+          |    "customer": "John Roberts",
+          |    "timeOfSale": "2019-02-11T06:46:51.623Z",
+          |    "items": [
+          |      {
+          |        "upc": "1234",
+          |        "quantity": 2,
+          |        "price": 123.45
+          |      }
+          |    ],
+          |    "total": 1234.56,
+          |    "tendered": {
+          |      "type": "CASH",
+          |      "amount": 1235.56
+          |    },
+          |    "returned": 1
+          |  },
+          |  "created_at": "2019-02-11T19:25:09.687Z"
+          | }]
+
+      h4 Read (by ID)
+
+      p Retrieve a sales record for a given ID.
+      pre
+        code GET /sales/:id
+
+      p Returns a sales object in the following format:
+      pre
+        code
+          | {
+          |   "customer": "John Roberts",
+          |   "timeOfSale": "2019-02-11T06:46:51.623Z",
+          |   "items": [
+          |     {
+          |       "upc": "1234",
+          |       "quantity": 2,
+          |       "price": 123.45
+          |     }
+          |   ],
+          |   "total": 1234.56,
+          |   "tendered": {
+          |     "type": "CASH",
+          |     "amount": 1235.56
+          |   },
+          |   "returned": 1
+          | }
+
+      h4 Create
+
+      p Create a sale. Requires a JSON body containing the sales data.
+      pre
+        code PUT /sales
+          |
+          | {
+          |   "customer": "John Roberts",
+          |   "timeOfSale": "2019-02-11T06:46:51.623Z",
+          |   "items": [
+          |     { "upc": "1234", "quantity": 2, "price": 123.45 }
+          |   ],
+          |   "total": 1234.56,
+          |   "tendered": {
+          |   "type": "CASH",
+          |   "amount": 1235.56
+          |   },
+          |   "returned": 1.00
+          | }
+
+      p Returns an object containing the ID for the newly created sales entry:
+      pre
+        code
+          | {
+          |   "id": 4
+          | }
