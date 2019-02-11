@@ -4,6 +4,10 @@ const productData = require('./products.json');
 const db = require('../database')
 const validateJson = require('./validateJson')
 
+router.get('/', (_, response) => {
+  response.text("Nothing to see here")
+})
+
 router.get('/products', function (_, response) {
   response.json(productData);
 });
