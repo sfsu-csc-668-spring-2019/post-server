@@ -114,8 +114,8 @@ const validateReturned = ({ tendered, returned }) => {
   return result
 }
 
-const validateJson = json => {
-  return [
+const salesValidation = ({ body: json }, response, next) => {
+  const validationResults = [
     ...validateCustomer(json),
     ...validateTimeOfSale(json),
     ...validateItems(json),
@@ -123,6 +123,12 @@ const validateJson = json => {
     ...validateTendered(json),
     ...validateReturned(json)
   ]
+
+  if (validationResults.length > 0) {
+    response.status(400).json({ error: validationResults });
+  } else {
+    next()
+  }
 }
 
-module.exports = validateJson;
+module.exports = salesValidation;
