@@ -16,14 +16,14 @@ router.get('/sales', (request, response) => {
   const teamId = request.header('x-team-id')
 
   if (teamId === undefined) {
-    response.status(400).json({ error: "Missing x-team-id header" });
+    response.status(401).json({ error: "Missing x-team-id header" });
   } else {
     db.any("select id, sale_data, created_at from sales where team_id=${teamId}", { teamId })
       .then(result => {
         response.json(result);
       })
-      .catch(_ => {
-        response.status(500).end();
+      .catch(error => {
+        response.status(500).end({ error });
       })
   }
 })
@@ -32,7 +32,7 @@ router.get('/sales/:id', (request, response) => {
   const teamId = request.header('x-team-id')
 
   if (teamId === undefined) {
-    response.status(400).json({ error: "Missing x-team-id header" });
+    response.status(401).json({ error: "Missing x-team-id header" });
   } else {
     db.one(
       "select sale_data from sales where id=${id} and team_id=${teamId}",
@@ -42,7 +42,6 @@ router.get('/sales/:id', (request, response) => {
         response.json(sale_data)
       })
       .catch(error => {
-        console.log(error);
         response.status(500).end({ error });
       })
   }
@@ -53,7 +52,7 @@ router.put('/sales', (request, response) => {
   const missing = validateJson(request.body);
 
   if (teamId === undefined) {
-    response.status(400).json({ error: "Missing x-team-id header" });
+    response.status(401).json({ error: "Missing x-team-id header" });
   } else if (missing.length > 0) {
     response.status(400).json({ error: missing });
   } else {
