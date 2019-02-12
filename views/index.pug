@@ -16,7 +16,12 @@ block content
       pre
         code x-team-id: jrob
       p Failure to provide this header will result in a 401 response.
-      
+      pre
+        code
+          | {
+          |   "error": "Missing x-team-id header"
+          | }
+
   .row
     .twelve
       h2 Endpoints
@@ -43,6 +48,7 @@ block content
       pre
         code GET /sales
 
+      h5 200
       p Returns an array of sales in the following format:
       pre
         code
@@ -74,6 +80,7 @@ block content
       pre
         code GET /sales/:id
 
+      h5 200
       p Returns a sales object in the following format:
       pre
         code
@@ -115,9 +122,68 @@ block content
           |   "returned": 1.00
           | }
 
+      h5 201
       p Returns an object containing the ID for the newly created sales entry:
       pre
         code
           | {
           |   "id": 4
           | }
+
+      h5 400
+      p Returns an object with an errors key that specifies validation errors
+      pre
+        code
+          | {
+          |   "error": [
+          |     "A tendered type (CASH, CHECK, or CREDIT) must be provided",
+          |     "A valid tendered object must be provided to validate returned field"
+          |   ]
+          | }
+
+      h3 Payments
+
+      h4 Check
+      p Validate a check. Requires a JSON body specifying the check amount:
+      pre
+        code POST /payments/check
+         |
+         | { amount: 1234.56 }
+
+      h5 202
+      p If the check is accepted, a 202 response will be sent with no body.
+
+      h5 400
+      p Returns an object with an error key that specifies validation errors
+      pre
+        code
+          | {
+          |   "error": "Check amount is required"
+          | }
+
+      h5 406
+      p If the check is not accepted, a 406 will be sent with no body.
+
+      h4 Credit
+      p Validate a credit card purchase. Requires a JSON body specifying the amount and card number:
+      pre
+        code POST /payments/credit
+         |
+         | { amount: 1234.56, cardNumber: 123456 }
+
+      h5 202
+      p If the credit card is accepted, a 202 response will be sent with no body.
+
+      h5 400
+      p Returns an object with an error key that specifies validation errors
+      pre
+        code
+          | {
+          |   "error": [
+          |     "Credit amount is required",
+          |     "Card number is required"
+          |   ]
+          | }
+
+      h5 406
+      p If the credit card is not accepted, a 406 will be sent with no body.
