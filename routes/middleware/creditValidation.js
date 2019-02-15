@@ -3,7 +3,7 @@ const validateCredit = ({ amount, cardNumber }) => {
 
   if (amount === undefined) {
     errors.push("Credit amount is required")
-  } else if (typeof (amount !== 'number')) {
+  } else if (typeof (amount) !== 'number') {
     errors.push("Invalid amount format (must be a number)")
   }
 
