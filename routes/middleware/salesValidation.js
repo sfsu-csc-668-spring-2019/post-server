@@ -19,7 +19,7 @@ const validateTimeOfSale = ({ timeOfSale }) => {
 
   try {
     new Date(timeOfSale)
-  } catch {
+  } catch (_) {
     result.push("Time of sale is not in a valid date format")
   }
 
